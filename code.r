@@ -37,3 +37,17 @@ global_ts<- ts(clean_global_temp[,c("avg_temp")], frequency=12, start=c(1743,1))
 plot.ts(global_ts)
 smooth_plot_global<- SMA(global_ts,n=3)
 plot.ts(smooth_plot_global)
+
+#making one combined_ts from Stockholm and Global timeseries data (FROM HERE STARTS THE BOOBOO)
+combined_ts <-ts.union(stockholm_ts,global_ts, dframe=FALSE)
+
+#plottig combined_ts
+ts.plot(stockholm_ts, global_ts,
+        gpars=list(xlab="year", ylab="avg_temp", lty=c(1:3)))
+
+require(zoo) 
+plot(smooth_plot_global)
+lines(rollapply(smooth_plot_global, width = 10, FUN = mean), col = 'red')
+plot(smooth_plot_stockholm)
+lines(rollapply(smooth_plot_stockholm, width = 10, FUN = mean), col = 'blue')
+
